@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<!-- DO NOT MODIFY THIS FILE -->
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>One Beer Detail</title>
+	</head>
+	<body>
+
+		<h1>Breweries for: SELECTED BEER</h1>
+
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Beer Name</th>
+					<th>Description</th>
+					<th>Brewery Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="b : ${beerList}">
+					<td>
+						<span th:text="${b.beerName}"></span> 	
+					</td>
+					<td>
+						<span th:text="${b.beerDescription}"></span> 
+					</td>
+					<td>
+						<span th:text="${b.breweryName}"></span> 
+					</td>
+					<!-- <td>
+						<a data-th-href="@{/beer/style/{id}?styleName={styleName}(id=*{styleId}, styleName=*{name})}">
+							<span data-th-text="*{beerCount}"></span>
+						</a>
+					</td> -->
+				</tr>
+			</tbody>
+		</table>
+
+	</body>
+</html>
