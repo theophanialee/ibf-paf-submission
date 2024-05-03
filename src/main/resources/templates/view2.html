@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<!-- DO NOT MODIFY THIS FILE -->
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One Brewery Detail</title>
+  </head>
+
+  <body>
+    <div th:object="${brewery}">
+      <h1>Details for: <span th:text="*{name}"></span></h1>
+
+      <a href="#" onclick="goBack()">Go Back</a>
+
+      <table>
+        <tr>
+          <th>Description:</th>
+          <td><span th:text="*{description}"></span></td>
+		  
+        </tr>
+        <tr>
+          <th>Address:</th>
+          <td>
+            <span th:text="*{address1}"></span><br />
+            <span th:text="*{address2}"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Phone:</th>
+          <td><span th:text="*{phone}"></span></td>
+        </tr>
+        <tr>
+          <th>Website:</th>
+          <td><a th:href="*{website}">Go</a></td>
+        </tr>
+      </table>
+
+      <h2>Beers</h2>
+
+	  <form th:action="@{/brewery/{breweryId}/order(breweryId=${breweryId})}"  method="POST">
+        <button>Place order</button>
+        <h2 th:if="${#lists.isEmpty(beerList)}">
+          No beers found for this brewery
+        </h2>
+        <table border="1" th:unless="${#lists.isEmpty(beerList)}">
+          <thead>
+            <tr>
+              <th>Beer Name</th>
+              <th>Description</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="b: ${beerList}">
+				
+              <td>
+                <span th:text="${b.beerName}"></span>
+              </td>
+              <td>
+                <span th:text="${b.beerDescription}"></span>
+              </td>
+              <td>
+				<input type="number" name="quantity" />
+				<input type="hidden" name="beerId" th:value="${b.beerId}">
+              </td>
+		
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</html>

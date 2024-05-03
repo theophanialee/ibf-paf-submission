@@ -20,6 +20,23 @@ public interface Queries {
             WHERE beers.style_id = ?
             ORDER BY beer_name ASC;
                            """;
+    public static final String GET_BEERS_BY_BREWERY = """
+            SELECT breweries.name AS brewery_name,
+            breweries.id AS brewery_id,
+            breweries.descript AS brew_descript,
+            breweries.address1 AS address1,
+            breweries.address2 AS address2,
+            breweries.city AS city,
+            breweries.phone AS phone,
+            breweries.website AS website,
+            beers.id AS beer_id,
+            beers.name AS beer_name,
+            beers.descript AS beer_descript
+            from breweries
+            LEFT JOIN beers ON breweries.id=beers.brewery_id
+            WHERE beers.brewery_id=?
+            ORDER BY beers.name ASC;
+                                   """;
 
     // public static final String SQL_ADD_ORDER = """
     // INSERT INTO orders(order_date,customer_name,ship_address,notes,tax)

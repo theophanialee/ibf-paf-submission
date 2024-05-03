@@ -3,42 +3,43 @@
 <!-- DO NOT MODIFY THIS FILE -->
 
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>One Beer Detail</title>
-	</head>
-	<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One Beer Detail</title>
+  </head>
 
-		<h1>Breweries for: SELECTED BEER</h1>
+  <body>
+    <h1>Breweries for: <span th:text="${styleName}"></span></h1>
 
-		<table border="1">
-			<thead>
-				<tr>
-					<th>Beer Name</th>
-					<th>Description</th>
-					<th>Brewery Name</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="b : ${beerList}">
-					<td>
-						<span th:text="${b.beerName}"></span> 	
-					</td>
-					<td>
-						<span th:text="${b.beerDescription}"></span> 
-					</td>
-					<td>
-						<span th:text="${b.breweryName}"></span> 
-					</td>
-					<!-- <td>
-						<a data-th-href="@{/beer/style/{id}?styleName={styleName}(id=*{styleId}, styleName=*{name})}">
-							<span data-th-text="*{beerCount}"></span>
-						</a>
-					</td> -->
-				</tr>
-			</tbody>
-		</table>
+    <a href="/styles">Back</a>
+    <h2 th:if="${#lists.isEmpty(beerList)}">No beers found for this style</h2>
+    <table border="1" th:unless="${#lists.isEmpty(beerList)}">
+      <thead>
+        <tr>
+          <th>Beer Name</th>
+          <th>Description</th>
+          <th>Brewery Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="b : ${beerList}">
+          <td>
+            <span th:text="${b.beerName}"></span>
+          </td>
+          <td>
+            <span th:text="${b.beerDescription}"></span>
+          </td>
 
-	</body>
+          <td>
+            <a
+              th:href="@{/beer/brewery/{id}?breweryName={breweryName}&sid={styleId}(id=${b.breweryId}, breweryName=${b.breweryName}, styleId=${styleId})}"
+            >
+              <span th:text="${b.breweryName}"></span>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>

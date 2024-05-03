@@ -1,5 +1,7 @@
 package ibf2024.assessment.paf.batch4.controllers;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ibf2024.assessment.paf.batch4.models.Beer;
 import ibf2024.assessment.paf.batch4.models.Brewery;
+import ibf2024.assessment.paf.batch4.models.Order;
+import ibf2024.assessment.paf.batch4.models.Orders;
 import ibf2024.assessment.paf.batch4.models.Style;
 import ibf2024.assessment.paf.batch4.services.BeerService;
-import jakarta.websocket.server.PathParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class BeerController {
@@ -40,6 +45,9 @@ public class BeerController {
 		System.out.println(styleId + styleName);
 
 		List<Beer> beerList = beerSvc.getBreweriesByBeer(styleId);
+
+		model.addAttribute("styleName", styleName);
+		model.addAttribute("styleId", styleId);
 		model.addAttribute("beerList", beerList);
 
 		return "view1";
@@ -48,7 +56,53 @@ public class BeerController {
 
 	//TODO Task 4 - view 2
 
+	@GetMapping("/beer/brewery/{breweryId}")
+	public String getMethodName(@PathVariable int breweryId,
+			@RequestParam String breweryName,
+			@RequestParam String sid,
+			Model model) {
+
+		Brewery brewery = beerSvc.getBeersFromBrewery(breweryId).get();
+
+		model.addAttribute("brewery", brewery);
+		model.addAttribute("beerList", brewery.getBeers());
+		model.addAttribute("styleId", sid);
+		return "view2";
+	}
 	
 	//TODO Task 5 - view 2, place order
+	@PostMapping("/brewery/{breweryId}/order")
+	public String submitOrder(@PathVariable int breweryId, @RequestBody String order, Model model) {
+		String[] orderArr = order.split("&");
+
+		// Find the midpoint to split between quantity and beerId
+		int midpoint = orderArr.length / 2;
+
+		LinkedList<Orders> orderList = new LinkedList<>();
+		for (int i = 0; i < midpoint; i++) {
+			Orders detail = new Orders();
+
+			// Get the quantity and beerId corresponding to the current index
+			String quantity = orderArr[i];
+			String beerId = orderArr[midpoint + i];
+
+			// Extract the value part from the key-value pair
+			String[] quantityPair = quantity.split("=");
+			String[] beerIdPair = beerId.split("=");
+
+			// Check if both quantity and beerId are not empty
+			if (quantityPair.length == 2 && beerIdPair.length == 2) {
+				int quantityValue = Integer.parseInt(quantityPair[1]);
+				int beerIdValue = Integer.parseInt(beerIdPair[1]);
+				detail.setQuantity(quantityValue);
+				detail.setBeerId(beerIdValue);
+				orderList.add(detail);
+			}
+		}
+
+		String orderId = beerSvc.placeOrder(orderList, breweryId);
+		model.addAttribute("orderId", orderId);
+		return "view3";
+	}
 
 }

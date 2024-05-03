@@ -75,6 +75,7 @@ public class Brewery {
 		this.beers.add(beer);
 	}
 
+
 	@Override
 	public String toString() {
 		return "Brewery [breweryId=" + breweryId + ", name=" + name + ", address1=" + address1 + ", address2="
